@@ -602,10 +602,14 @@
 }).call(this);
 
 },{}],2:[function(require,module,exports){
+// import actioncable
 var ActionCable = require('./action_cable');
 
+//create connection to socket
 var cable = ActionCable.createConsumer('ws://localhost:3000/cable')
 
+//create subscription to message_channel
+//when messagaes are received via socket, append to #main
 cable.subscriptions.create('MessageChannel', {
   received: (data) => {
     console.log(data);
@@ -613,14 +617,23 @@ cable.subscriptions.create('MessageChannel', {
   }
 });
 
-$('#send-button').click(() => {
-  $.ajax({
-    method: 'post',
-    url: 'http://localhost:3000/messages',
-    data: JSON.stringify({ "message" : {"content" : $('#message-box').val()}}),
-    contentType: "application/json; charset=utf-8",
-    dataType: "json",
-  });
+//when send button is clicked
+//post to messages table
+//message will be transmitted via websocket to dom
+$(window).keyup(e => {
+  console.log('firing');
+  if (e.keyCode === 13) {
+    $('#send-button').click(() => {
+      $.ajax({
+        method: 'post',
+        url: 'http://localhost:3000/messages',
+        data: JSON.stringify({ "message" : {"content" : $('#message-box').val()}}),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+      });
+      $('#message-box').val('');
+    });
+  }
 });
 
 },{"./action_cable":1}]},{},[1,2]);

@@ -16,12 +16,17 @@ cable.subscriptions.create('MessageChannel', {
 //when send button is clicked
 //post to messages table
 //message will be transmitted via websocket to dom
-$('#send-button').click(() => {
-  $.ajax({
-    method: 'post',
-    url: 'http://localhost:3000/messages',
-    data: JSON.stringify({ "message" : {"content" : $('#message-box').val()}}),
-    contentType: "application/json; charset=utf-8",
-    dataType: "json",
-  });
+$(window).keyup(e => {
+  console.log('firing');
+  if (e.keyCode === 13) {
+      $.ajax({
+        method: 'post',
+        url: 'http://localhost:3000/messages',
+        data: JSON.stringify({ "message" : {"content" : $('#message-box').val()}}),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+      });
+      $('#message-box').val('');
+    };
+  }
 });
